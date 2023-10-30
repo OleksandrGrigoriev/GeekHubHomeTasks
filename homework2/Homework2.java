@@ -3,38 +3,44 @@ package org.homework2;
 import java.util.Scanner;
 
 public class Homework2 {
+
+    private static final  String[] SUBJECT = {"Math", "Science", "History"};
+    public static final int AMOUNT_OF_COLUMNS_IN_INFO_TABLE = 4;
+    public static int AMOUNT_OF_ROWS_IN_INFO_TABLE;
     public static void main(String[] args) {
         if (args.length == 0 || args[0] == null || Integer.parseInt(args[0]) <= 0) {
             System.out.println("Please, provide number of students via commandline arguments (must be positive integer number)!");
             System.exit(1);
         }
 
+        AMOUNT_OF_ROWS_IN_INFO_TABLE = Integer.parseInt(args[0]);
+
         int numberOfStudents = Integer.parseInt(args[0]);
         String[][] informationAboutStudents;
 
         informationAboutStudents = enterInformationAboutStudents(numberOfStudents);
-        averageGrades(informationAboutStudents);
+        averageGradesOutput(informationAboutStudents);
     }
 
     public static String[][] enterInformationAboutStudents(int numberOfStudents) {
         Scanner scanner = new Scanner(System.in);
-        String[][] result = new String[numberOfStudents][4];
+        String[][] result = new String[numberOfStudents][AMOUNT_OF_COLUMNS_IN_INFO_TABLE];
 
-        for (int i = 0; i < numberOfStudents; i++) {
-            System.out.printf("Enter information for student #%d%n", i + 1);
-            for (int j = 0; j < 4; j++) {
+        for (int studentIndex = 1; studentIndex <= numberOfStudents; studentIndex++) {
+            System.out.printf("Enter information for student #%d%n", studentIndex);
+            for (int column = 0; column < AMOUNT_OF_COLUMNS_IN_INFO_TABLE; column++) {
 
-                printMessage(j);
+                printMessageAboutInsertingData(column);
 
-                result[i][j] = scanner.nextLine();
-                if (j == 0 && (result[i][j].isEmpty() || result[i][j].isBlank())) {
+                result[studentIndex - 1][column] = scanner.nextLine();
+                if (column == 0 && (result[studentIndex - 1][column].isBlank())) {
                     System.out.println("Enter a correct name (non empty string)!");
-                    j--;
-                } else if (j != 0){
-                    int grade = Integer.parseInt(result[i][j]);
+                    column--;
+                } else if (column != 0){
+                    int grade = Integer.parseInt(result[studentIndex - 1][column]);
                     if (grade < 0 || grade > 100) {
                         System.out.println("Enter correct grade (0 - 100)!");
-                        j--;
+                        column--;
                     }
                 }
             }
@@ -43,42 +49,42 @@ public class Homework2 {
         return result;
     }
 
-    public static void averageGrades(String[][] informationAboutStudents) {
+    public static void averageGradesOutput(String[][] informationAboutStudents) {
         System.out.println();
         System.out.println("Average grade for Each Student:");
-        for (int i = 0; i < informationAboutStudents.length; i++) {
-            System.out.print(informationAboutStudents[i][0] + ": ");
+        for (int studentIndex = 0; studentIndex < informationAboutStudents.length; studentIndex++) {
+            System.out.print(informationAboutStudents[studentIndex][0] + ": ");
             int averageGrade = 0;
-            for (int j = 1; j < informationAboutStudents[i].length; j++) {
-                averageGrade += Integer.parseInt(informationAboutStudents[i][j]);
+            for (int gradeColumn = 1; gradeColumn < informationAboutStudents[studentIndex].length; gradeColumn++) {
+                averageGrade += Integer.parseInt(informationAboutStudents[studentIndex][gradeColumn]);
             }
-            System.out.println(averageGrade/3.0);
+            System.out.println(averageGrade/SUBJECT.length);
         }
 
         System.out.println();
-        String[] subject = {"Math", "Science", "History"};
+
         System.out.println("Average grade for Each Subject:");
-        for (int j = 1; j < informationAboutStudents[0].length; j++) {
-            System.out.print(subject[j - 1] + ": ");
+        for (int columnInTable = 1; columnInTable < AMOUNT_OF_COLUMNS_IN_INFO_TABLE; columnInTable++) {
+            System.out.print(SUBJECT[columnInTable - 1] + ": ");
             int averageGrade = 0;
-            for (int i = 0; i < informationAboutStudents.length; i++) {
-                averageGrade += Integer.parseInt(informationAboutStudents[i][j]);
+            for (int studentIndex = 0; studentIndex < informationAboutStudents.length; studentIndex++) {
+                averageGrade += Integer.parseInt(informationAboutStudents[studentIndex][columnInTable]);
             }
             System.out.println(averageGrade/(double)informationAboutStudents.length);
         }
     }
 
-    public static void printMessage(int argument) {
-        if (argument == 0) {
+    public static void printMessageAboutInsertingData(int columnOfInfoTable) {
+        if (columnOfInfoTable == 0) {
             System.out.print("Student's name: ");
         }
-        if (argument == 1) {
+        if (columnOfInfoTable == 1) {
             System.out.print("Math grade (0 - 100): ");
         }
-        if (argument == 2) {
+        if (columnOfInfoTable == 2) {
             System.out.print("Science grade (0 - 100): ");
         }
-        if (argument == 3) {
+        if (columnOfInfoTable == 3) {
             System.out.print("History grade (0 - 100): ");
         }
     }
